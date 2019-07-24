@@ -1,4 +1,4 @@
-package com.cronutils;
+package com.cronutils.dataset;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,16 +44,18 @@ public class DatasetUtils {
     }
 
     private static String ordinals(int number){
-        switch (number){
+        String numberString= String.format("%s", number);
+        int lastDigit = Integer.parseInt(""+numberString.charAt(numberString.lastIndexOf(numberString)));
+        String ending = "th";
+        switch (lastDigit){
             case 1:
-                return "1st";
+                ending = "st";
             case 2:
-                return "2nd";
+                ending = "nd";
             case 3:
-                return "3rd";
-            default:
-                return String.format("%sth", number);
+                ending = "rd";
         }
+        return String.format("%s%s", number, ending);
     }
 
     private static Map<String, String> year(){
