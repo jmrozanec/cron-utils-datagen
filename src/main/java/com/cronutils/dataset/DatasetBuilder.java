@@ -12,11 +12,16 @@ import static com.cronutils.model.CronType.QUARTZ;
 
 public class DatasetBuilder {
     private long seed = 12345;
-    private ISO639 targetLanguage;
     private Random random;
+    private ISO639 targetLanguage;
+    private TemplateMappingStrategy templateMappingStrategy;
+    private TemplateEnum template;
 
-    public DatasetBuilder(ISO639 targetLanguage){
+
+    public DatasetBuilder(ISO639 targetLanguage, TemplateMappingStrategy templateMappingStrategy, TemplateEnum template){
         this.targetLanguage = targetLanguage;
+        this.templateMappingStrategy = templateMappingStrategy;
+        this.template = template;
     }
 
     public Dataset build(int entries){
@@ -44,8 +49,8 @@ public class DatasetBuilder {
         Map<String, String> targets = new HashMap<>();
 
         while(expressions.size()<entries){
-            String choice = templatekeys.get((int)(templatekeys.size()*this.random.nextInt()));
-            String target = templates.get(choice);
+            String cronExpressionTemplateChoice = templatekeys.get(getNextRandom(templatekeys.size()));
+            String targetCronExpressionDescription = templates.get(cronExpressionTemplateChoice);
             Map<String, String> valueMappings = new HashMap<>();
             populate(valueMappings, "SEC", chooseRandom(seconds, 4));
             populate(valueMappings, "MIN", chooseRandom(minutes, 4));
@@ -59,15 +64,14 @@ public class DatasetBuilder {
             valueMappings.put("DOMCOUNT", chooseRandom(domcounts, 1).get(0));
             valueMappings.put("WEEK_ORDINAL", chooseRandom(weekcounts, 1).get(0));
 
-            String instance = generateInstance(choice, valueMappings);
-            if(!expressions.contains(instance)){
+            String cronExpressionInstance = generateCronExpressionInstance(cronExpressionTemplateChoice, valueMappings);
+            if(!expressions.contains(cronExpressionInstance)){
                 try {
-                    String description = descriptor.describe(parser.parse(instance));
-                    expressions.add(instance);
-                    sources.put(instance, description);
-                    targets.put(instance, target);
+                    String cronExpressionBasicDescription = descriptor.describe(parser.parse(cronExpressionInstance));
+                    expressions.add(cronExpressionInstance);
+                    templateMappingStrategy.add(sources, targets, cronExpressionInstance, cronExpressionBasicDescription, targetCronExpressionDescription);
                 }catch (RuntimeException ex){
-                    System.out.println(String.format("'%s' produces an exception while described: %s", instance, ex.getMessage()));
+                    System.out.println(String.format("'%s' produces an exception while described: %s", cronExpressionInstance, ex.getMessage()));
                 }
             }
         }
@@ -101,7 +105,7 @@ public class DatasetBuilder {
             valueMappings.put("DOMCOUNT", chooseRandom(domcounts, 1).get(0));
             valueMappings.put("WEEK_ORDINAL", chooseRandom(weekcounts, 1).get(0));
 
-            String instance = generateInstance(key, valueMappings);
+            String instance = generateCronExpressionInstance(key, valueMappings);
             try {
                 parser.parse(instance);
             } catch (RuntimeException ex) {
@@ -122,7 +126,7 @@ public class DatasetBuilder {
         Set<String> choices = new HashSet<>();
         List<String> alts = new ArrayList<>(alternatives);
         while(choices.size()<howmany){
-            int ch = (int)((alternatives.size()-1)*this.random.nextInt());
+            int ch = getNextRandom(alternatives.size());
             choices.add(alts.get(ch));
         }
         List<String>choiceList = new ArrayList<>(choices);
@@ -136,7 +140,7 @@ public class DatasetBuilder {
         }
     }
 
-    private String generateInstance(String crontemplate, Map<String, String> mappings){
+    private String generateCronExpressionInstance(String crontemplate, Map<String, String> mappings){
         String[]template = new String[]{crontemplate};
         mappings.forEach((key, value) -> template[0] = template[0].replace(key, value));
         return template[0];
@@ -144,13 +148,17 @@ public class DatasetBuilder {
 
     private Map<String, String> templates(){
         Map<String, String> templates = new HashMap<>();
-        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(String.format("%s-01.template", this.targetLanguage.toString().toLowerCase()));
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(String.format(this.template.getTemplateString(), this.targetLanguage.toString().toLowerCase()));
         try (Scanner s = new Scanner(inputStream)) {
             while (s.hasNext()) {
                 String line = s.nextLine();
-                templates.put(line.split("|")[0], line.split("|")[1]);
+                templates.put(line.split("\\|")[0], line.split("\\|")[1]);
             }
         }
         return templates;
+    }
+
+    private int getNextRandom(int boundSize){
+        return this.random.nextInt(boundSize);
     }
 }
