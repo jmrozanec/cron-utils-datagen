@@ -69,7 +69,7 @@ public class DatasetBuilder {
                 try {
                     String cronExpressionBasicDescription = descriptor.describe(parser.parse(cronExpressionInstance));
                     expressions.add(cronExpressionInstance);
-                    templateMappingStrategy.add(sources, targets, cronExpressionInstance, cronExpressionBasicDescription, targetCronExpressionDescription);
+                    templateMappingStrategy.add(sources, targets, valueMappings, cronExpressionInstance, cronExpressionBasicDescription, targetCronExpressionDescription);
                 }catch (RuntimeException ex){
                     System.out.println(String.format("'%s' produces an exception while described: %s", cronExpressionInstance, ex.getMessage()));
                 }
