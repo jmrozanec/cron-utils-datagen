@@ -7,10 +7,10 @@ Provides means to create datasets for cron descriptions in various languages.
   [ok]- template for EN
   - template for ES
   - template for SI
- - implement different dataset generation strategies:
-  - directly from cron
-  - from cron description
-  [ok]- from cron description with replacements
+ [ok]- implement different dataset generation strategies:
+  [ok]- directly from cron
+  [ok]- from cron description, with params replacement
+  [ok]- from cron description, without params replacement
 
  [ok]- make sure dataset generation is deterministic: under same conditions, same values are generated
- - train models over strategies and check how well do describe cron patterns
+ [wip]- train models over strategies and check how well do describe cron patterns
