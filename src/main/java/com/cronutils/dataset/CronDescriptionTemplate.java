@@ -1,11 +1,11 @@
 package com.cronutils.dataset;
 
-public enum TemplateEnum {
+public enum CronDescriptionTemplate {
     TEMPLATE_01("%s-01.template");
 
     private String templateString;
 
-    TemplateEnum(String templateString){
+    CronDescriptionTemplate(String templateString){
         this.templateString = templateString;
     }
 

@@ -3,6 +3,7 @@ package com.cronutils.dataset;
 import java.util.HashMap;
 import java.util.Map;
 
+@Deprecated
 public class Main {
     public static void main(String[] args) {
         Map<String, String> templates = templates();

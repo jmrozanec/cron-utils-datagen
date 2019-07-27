@@ -10,15 +10,15 @@ import java.util.*;
 
 import static com.cronutils.model.CronType.QUARTZ;
 
-public class DatasetBuilder {
+public class DatasetBuilderOld {
     private long seed = 12345;
     private Random random;
     private ISO639 targetLanguage;
     private TemplateMappingStrategy templateMappingStrategy;
-    private TemplateEnum template;
+    private CronDescriptionTemplate template;
 
 
-    public DatasetBuilder(ISO639 targetLanguage, TemplateMappingStrategy templateMappingStrategy, TemplateEnum template){
+    public DatasetBuilderOld(ISO639 targetLanguage, TemplateMappingStrategy templateMappingStrategy, CronDescriptionTemplate template){
         this.targetLanguage = targetLanguage;
         this.templateMappingStrategy = templateMappingStrategy;
         this.template = template;

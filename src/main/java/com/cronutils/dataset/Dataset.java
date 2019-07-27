@@ -1,8 +1,7 @@
 package com.cronutils.dataset;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Dataset {
@@ -10,20 +9,19 @@ public class Dataset {
     private Map<String, String> targets;
 
     public Dataset(Map<String, String> sources, Map<String, String> targets){
-        this.sources = sources;
-        this.targets = targets;
+        this.sources = Collections.unmodifiableMap(new LinkedHashMap<>(sources));
+        this.targets = Collections.unmodifiableMap(new LinkedHashMap<>(targets));;
     }
 
-    public void export(String filename){
-        BufferedWriter writer = null;
-        try {
-            writer = new BufferedWriter(new FileWriter(filename));
-            for(String key : sources.keySet()){
-                writer.write(String.format("%s | %s\n", sources.get(key), targets.get(key)));
-            }
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public final Map<String, String> getSources(){
+        return sources;
+    }
+
+    public final Map<String, String> getTargets(){
+        return targets;
+    }
+
+    public final void visit(DatasetVisitor visitor){
+        visitor.visit(this);
     }
 }
