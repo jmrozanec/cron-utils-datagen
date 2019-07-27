@@ -8,9 +8,9 @@ public class DatasetOptionsBuilder {
     private ISO639 targetLanguage = ISO639.EN;
     private CronDescriptionTemplate template = CronDescriptionTemplate.TEMPLATE_01;
     private CronDefinition cronDefinition = CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ);
-    private CronKeySelectionStrategy cronKeySelectionStrategy = CronKeySelectionStrategy.getCronTemplate();
-    private HeuristicCronDescriptionSelectionStrategy heuristicCronDescriptionSelectionStrategy = HeuristicCronDescriptionSelectionStrategy.getHeuristicDescription();
-    private HumanCronDescriptionSelectionStrategy humanCronDescriptionSelectionStrategy = HumanCronDescriptionSelectionStrategy.getHumanDescription();
+    private ValueSelectionStrategy cronKeySelectionStrategy = ValueSelectionStrategy.getCronTemplate();
+    private ValueSelectionStrategy heuristicCronDescriptionSelectionStrategy = ValueSelectionStrategy.getHeuristicDescription();
+    private ValueSelectionStrategy humanCronDescriptionSelectionStrategy = ValueSelectionStrategy.getHumanDescription();
     private CronTemplateProcessor cronTemplateProcessor = CronTemplateProcessor.getNullCronTemplateProcessor();
     private HeuristicCronDescriptionProcessor heuristicCronDescriptionProcessor = HeuristicCronDescriptionProcessor.getNullHeuristicCronDescriptionProcessor();
 
@@ -31,17 +31,17 @@ public class DatasetOptionsBuilder {
         return this;
     }
 
-    public DatasetOptionsBuilder withCronKey(CronKeySelectionStrategy cronKeySelectionStrategy){
+    public DatasetOptionsBuilder withCronKey(ValueSelectionStrategy cronKeySelectionStrategy){
         this.cronKeySelectionStrategy = cronKeySelectionStrategy;
         return this;
     }
 
-    public DatasetOptionsBuilder withHeuristicDescription(HeuristicCronDescriptionSelectionStrategy heuristicCronDescriptionSelectionStrategy){
+    public DatasetOptionsBuilder withHeuristicDescription(ValueSelectionStrategy heuristicCronDescriptionSelectionStrategy){
         this.heuristicCronDescriptionSelectionStrategy = heuristicCronDescriptionSelectionStrategy;
         return this;
     }
 
-    public DatasetOptionsBuilder withHumanDescription(HumanCronDescriptionSelectionStrategy humanCronDescriptionSelectionStrategy){
+    public DatasetOptionsBuilder withHumanDescription(ValueSelectionStrategy humanCronDescriptionSelectionStrategy){
         this.humanCronDescriptionSelectionStrategy = humanCronDescriptionSelectionStrategy;
         return this;
     }

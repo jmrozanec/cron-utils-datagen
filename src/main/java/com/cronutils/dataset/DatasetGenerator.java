@@ -59,14 +59,14 @@ public class DatasetGenerator {
             String cronTemplate = templatekeys.get(getNextRandom(templatekeys.size()));
             String cronTemplateTransformed = datasetOptions.getCronTemplateProcessor().process(cronTemplate);
             String cronTemplateInstance = generateCronExpressionInstance(cronTemplate, valueMappings);
-            String descriptionHeuristic = descriptor.describe(parser.parse(cronTemplateInstance));
-            String descriptionHeuristicTransformed = datasetOptions.getHeuristicCronDescriptionProcessor().process(descriptionHeuristic);
-            String descriptionHuman = templates.get(cronTemplate);
-            String descriptionHumanTransformed = descriptionHuman; //TODO we are not performing transformations by now
+            String heuristicDescription = descriptor.describe(parser.parse(cronTemplateInstance));
+            String heuristicDescriptionTransformed = datasetOptions.getHeuristicCronDescriptionProcessor().process(heuristicDescription);
+            String humanDescription = templates.get(cronTemplate);
+            String humanDescriptionTransformed = humanDescription; //TODO we are not performing transformations by now
 
-            String tripletKey = datasetOptions.getCronKeySelectionStrategy().getCronKey(cronTemplate, cronTemplateTransformed, cronTemplateInstance);
-            String tripletHeuristicDesc = datasetOptions.getHeuristicCronDescriptionSelectionStrategy().getHeuristicCronDescription(descriptionHeuristic, descriptionHeuristicTransformed);
-            String tripletHumanDesc = datasetOptions.getHumanCronDescriptionSelectionStrategy().getHumanCronDescription(descriptionHuman, descriptionHumanTransformed);
+            String tripletKey = datasetOptions.getCronKeySelectionStrategy().getValue(cronTemplate, cronTemplateTransformed, cronTemplateInstance, heuristicDescription, heuristicDescriptionTransformed, humanDescription, humanDescriptionTransformed);
+            String tripletHeuristicDesc = datasetOptions.getHeuristicCronDescriptionSelectionStrategy().getValue(cronTemplate, cronTemplateTransformed, cronTemplateInstance, heuristicDescription, heuristicDescriptionTransformed, humanDescription, humanDescriptionTransformed);
+            String tripletHumanDesc = datasetOptions.getHumanCronDescriptionSelectionStrategy().getValue(cronTemplate, cronTemplateTransformed, cronTemplateInstance, heuristicDescription, heuristicDescriptionTransformed, humanDescription, humanDescriptionTransformed);
 
             if(!expressions.contains(tripletKey)){
                 try {
@@ -77,7 +77,6 @@ public class DatasetGenerator {
                     System.out.println(String.format("'%s' from template '%s' produces an exception while described: %s ", cronTemplateInstance, cronTemplate, ex.getMessage()));
                 }
             }
-
         }
         return new Dataset(sources, targets);
     }

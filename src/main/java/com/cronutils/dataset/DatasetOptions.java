@@ -6,16 +6,16 @@ class DatasetOptions {
     private ISO639 targetLanguage;
     private CronDescriptionTemplate template;
     private CronDefinition cronDefinition;
-    private CronKeySelectionStrategy cronKeySelectionStrategy;
-    private HeuristicCronDescriptionSelectionStrategy heuristicCronDescriptionSelectionStrategy;
-    private HumanCronDescriptionSelectionStrategy humanCronDescriptionSelectionStrategy;
+    private ValueSelectionStrategy cronKeySelectionStrategy;
+    private ValueSelectionStrategy heuristicCronDescriptionSelectionStrategy;
+    private ValueSelectionStrategy humanCronDescriptionSelectionStrategy;
     private CronTemplateProcessor cronTemplateProcessor;
     private HeuristicCronDescriptionProcessor heuristicCronDescriptionProcessor;
 
     DatasetOptions(ISO639 targetLanguage, CronDescriptionTemplate template, CronDefinition cronDefinition,
-                   CronKeySelectionStrategy cronKeySelectionStrategy,
-                   HeuristicCronDescriptionSelectionStrategy heuristicCronDescriptionSelectionStrategy,
-                   HumanCronDescriptionSelectionStrategy humanCronDescriptionSelectionStrategy,
+                   ValueSelectionStrategy cronKeySelectionStrategy,
+                   ValueSelectionStrategy heuristicCronDescriptionSelectionStrategy,
+                   ValueSelectionStrategy humanCronDescriptionSelectionStrategy,
                    CronTemplateProcessor cronTemplateProcessor, HeuristicCronDescriptionProcessor heuristicCronDescriptionProcessor) {
         this.targetLanguage = targetLanguage;
         this.template = template;
@@ -39,15 +39,15 @@ class DatasetOptions {
         return cronDefinition;
     }
 
-    public CronKeySelectionStrategy getCronKeySelectionStrategy() {
+    public ValueSelectionStrategy getCronKeySelectionStrategy() {
         return cronKeySelectionStrategy;
     }
 
-    public HeuristicCronDescriptionSelectionStrategy getHeuristicCronDescriptionSelectionStrategy() {
+    public ValueSelectionStrategy getHeuristicCronDescriptionSelectionStrategy() {
         return heuristicCronDescriptionSelectionStrategy;
     }
 
-    public HumanCronDescriptionSelectionStrategy getHumanCronDescriptionSelectionStrategy() {
+    public ValueSelectionStrategy getHumanCronDescriptionSelectionStrategy() {
         return humanCronDescriptionSelectionStrategy;
     }
 
