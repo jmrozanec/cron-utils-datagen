@@ -19,10 +19,10 @@ public class DatasetMain {
                 .forCronDefinition(CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ))
                 .withTargetLanguage(lang)
                 .withCronTemplateProcessor(CronTemplateProcessor.getNullCronTemplateProcessor())
-                .withCronKey(CronKeySelectionStrategy.getCronTemplate())
+                .withCronKey(ValueSelectionStrategy.getCronTemplate())
                 .withHeuristicCronDescriptionProcessor(HeuristicCronDescriptionProcessor.getNullHeuristicCronDescriptionProcessor())
-                .withHeuristicDescription(HeuristicCronDescriptionSelectionStrategy.getHeuristicDescription())
-                .withHumanDescription(HumanCronDescriptionSelectionStrategy.getHumanDescription())
+                .withHeuristicDescription(ValueSelectionStrategy.getHeuristicDescription())
+                .withHumanDescription(ValueSelectionStrategy.getHumanDescription())
                 .withTemplate(CronDescriptionTemplate.TEMPLATE_01)
                 .build();
         new DatasetGenerator(options).build(instancesCount).visit(DatasetVisitor.exportPipedFileDatasetVisitor(String.format("dataset-01-cronutils_en2%s-%s.psv", lang.toString().toLowerCase(), instancesCount)));
@@ -37,10 +37,10 @@ public class DatasetMain {
                 .forCronDefinition(CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ))
                 .withTargetLanguage(lang)
                 .withCronTemplateProcessor(CronTemplateProcessor.getNullCronTemplateProcessor())
-                .withCronKey(CronKeySelectionStrategy.getCronTemplate())
+                .withCronKey(ValueSelectionStrategy.getCronTemplate())
                 .withHeuristicCronDescriptionProcessor(HeuristicCronDescriptionProcessor.getNullHeuristicCronDescriptionProcessor())
-                .withHeuristicDescription(HeuristicCronDescriptionSelectionStrategy.getHeuristicDescription())
-                .withHumanDescription(HumanCronDescriptionSelectionStrategy.getHumanDescription())
+                .withHeuristicDescription(ValueSelectionStrategy.getHeuristicDescription())
+                .withHumanDescription(ValueSelectionStrategy.getHumanDescription())
                 .withTemplate(CronDescriptionTemplate.TEMPLATE_01)
                 .build();
         new DatasetGenerator(options).build(instancesCount).visit(DatasetVisitor.exportPipedFileDatasetVisitor(String.format("dataset-01-cronutils_en2%s-%s.psv", lang.toString().toLowerCase(), instancesCount)));
