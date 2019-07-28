@@ -25,7 +25,7 @@ SEC1 0 * ? 2/2 * | Every hour at second SEC_VAL on even months
 0 MIN1 0-11 L-DOM1 * ? | Every hour before midday at minute MIN_VAL for days from DOM_VAL till the end of month
 0 0 0 LW * ? | Every month on the last weekday, at midnight
 0 MIN1 0-11 ? * DOW1,DOW2 | Every DOW_VAL and DOW_VAL at minute MIN_VAL every hour before midday
-0 * * ? * YEAR1 | Every minute in YEAR_VAL
+0 * * ? * * YEAR1 | Every minute in YEAR_VAL
 1/2 * * ? * * | Every uneven second
 0 0 12 ? MONTH1 * | Every day at noon in MONTH_VAL
 0 MIN1 * ? 1/2 * | Every hour at minute MIN_VAL on uneven months
@@ -55,7 +55,7 @@ SEC1 MIN1 1/2 ? * * | Every uneven hour at MIN_VAL:SEC_VAL
 0 MIN1 HOUR1 DOM1W * ? | Every month on the nearest weekday to the DOM_ORDINAL_VAL of the month, at HOUR_VAL:MIN_VAL
 0 0 12 ? * MON-FRI | Every weekday at noon
 0 0 12 LW * ? | Every month on the last weekday, at noon
-* * * ? * * | Every second
+* * * ? * * * | Every second
 0 0 12 */DOMCOUNT * ? | Every DOMCOUNT_VAL days at noon
 0 MIN1 HOUR1 * * ? | Every day at HOUR_VAL:MIN_VAL
 0 MIN1 0-11 1/MONTH1 * ? | Every MONTH_VAL months on the DOM_VAL, at minute MIN_VAL every hour before midday
@@ -92,7 +92,7 @@ SEC1,SEC2,SEC3 * * ? * * * | Every minute on seconds SEC1, SEC2 and SEC3
 SEC1 MIN1 * ? 1/2 * | Every hour at minute MIN_VAL and second SEC_VAL on uneven months
 0 MIN1 0-11 LW * ? | Every hour before midday at minute MIN_VAL on last weekday in month
 0 MIN1 HOUR1 L-DOM1 * ? | Every month on the DOM_VAL to last day of the month, at HOUR_VAL:MIN_VAL
-* * * ? * YEAR1 | Every second in YEAR_VAL
+* * * ? * * YEAR1 | Every second in YEAR_VAL
 0 * HOUR1-HOUR2 DOW1-DOW2 * ? | Every minute between HOUR_VAL and HOUR_VAL between DOW_VAL and DOW_VAL
 SEC1 1/2 * ? * * | Every uneven minute at second SEC_VAL
 0 0 12 DOM1 * ? | Every noon on DOM_ORDINAL_VAL day in month

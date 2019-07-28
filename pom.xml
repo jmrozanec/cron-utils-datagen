@@ -62,7 +62,7 @@
         <junit.version>4.12</junit.version>
         <mockito.version>1.10.19</mockito.version>
         <powermock.version>1.6.2</powermock.version>
-        <cronutils.version>7.0.2</cronutils.version>
+        <cronutils.version>9.0.2-SNAPSHOT</cronutils.version>
 
         <github.global.server>github</github.global.server>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -79,7 +79,7 @@
         <dependency>
             <groupId>com.cronutils</groupId>
             <artifactId>cron-utils</artifactId>
-            <version>7.0.2</version>
+            <version>${cronutils.version}</version>
         </dependency>
 
         <dependency>

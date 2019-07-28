@@ -57,25 +57,30 @@ public class DatasetGenerator {
         while(expressions.size()<entries){
             Map<String, String> valueMappings = createRandomValueMappings(seconds, minutes, hours, months, dow, dom, years, weekcounts, domcounts);
             String cronTemplate = templatekeys.get(getNextRandom(templatekeys.size()));
-            String cronTemplateTransformed = datasetOptions.getCronTemplateProcessor().process(cronTemplate);
+            String cronTemplateTransformed = datasetOptions.getCronTemplateProcessor().process(valueMappings, cronTemplate);
             String cronTemplateInstance = generateCronExpressionInstance(cronTemplate, valueMappings);
-            String heuristicDescription = descriptor.describe(parser.parse(cronTemplateInstance));
-            String heuristicDescriptionTransformed = datasetOptions.getHeuristicCronDescriptionProcessor().process(heuristicDescription);
-            String humanDescription = templates.get(cronTemplate);
-            String humanDescriptionTransformed = humanDescription; //TODO we are not performing transformations by now
+            try {
+                String heuristicDescription = descriptor.describe(parser.parse(cronTemplateInstance));
+                String heuristicDescriptionTransformed = datasetOptions.getHeuristicCronDescriptionProcessor().process(heuristicDescription);
+                String humanDescription = templates.get(cronTemplate);
+                String humanDescriptionTransformed = humanDescription; //TODO we are not performing transformations by now
 
-            String tripletKey = datasetOptions.getCronKeySelectionStrategy().getValue(cronTemplate, cronTemplateTransformed, cronTemplateInstance, heuristicDescription, heuristicDescriptionTransformed, humanDescription, humanDescriptionTransformed);
-            String tripletHeuristicDesc = datasetOptions.getHeuristicCronDescriptionSelectionStrategy().getValue(cronTemplate, cronTemplateTransformed, cronTemplateInstance, heuristicDescription, heuristicDescriptionTransformed, humanDescription, humanDescriptionTransformed);
-            String tripletHumanDesc = datasetOptions.getHumanCronDescriptionSelectionStrategy().getValue(cronTemplate, cronTemplateTransformed, cronTemplateInstance, heuristicDescription, heuristicDescriptionTransformed, humanDescription, humanDescriptionTransformed);
+                String tripletKey = datasetOptions.getCronKeySelectionStrategy().getValue(cronTemplate, cronTemplateTransformed, cronTemplateInstance, heuristicDescription, heuristicDescriptionTransformed, humanDescription, humanDescriptionTransformed);
+                String tripletHeuristicDesc = datasetOptions.getHeuristicCronDescriptionSelectionStrategy().getValue(cronTemplate, cronTemplateTransformed, cronTemplateInstance, heuristicDescription, heuristicDescriptionTransformed, humanDescription, humanDescriptionTransformed);
+                String tripletHumanDesc = datasetOptions.getHumanCronDescriptionSelectionStrategy().getValue(cronTemplate, cronTemplateTransformed, cronTemplateInstance, heuristicDescription, heuristicDescriptionTransformed, humanDescription, humanDescriptionTransformed);
 
-            if(!expressions.contains(tripletKey)){
-                try {
+                if(!expressions.contains(tripletKey)){
                     expressions.add(tripletKey);
                     sources.put(tripletKey, tripletHeuristicDesc);
                     targets.put(tripletKey, tripletHumanDesc);
-                }catch (RuntimeException ex){
-                    System.out.println(String.format("'%s' from template '%s' produces an exception while described: %s ", cronTemplateInstance, cronTemplate, ex.getMessage()));
                 }
+                if(expressions.size()%100==0){
+                    System.out.println("==================================================");
+                    System.out.println(String.format("We got %s items", expressions.size()));
+                    System.out.println("==================================================");
+                }
+            }catch (RuntimeException ex){
+                System.err.println(String.format("'%s' from template '%s' produces an exception while described: %s ", cronTemplateInstance, cronTemplate, ex.getMessage()));
             }
         }
         return new Dataset(sources, targets);
@@ -89,60 +94,39 @@ public class DatasetGenerator {
                                                           Set<String> weekcounts, Set<String> domcounts){
 
         Map<String, String> valueMappings = new HashMap<>();
-        populate(valueMappings, "SEC", chooseRandom(seconds, 4));
-        populate(valueMappings, "MIN", chooseRandom(minutes, 4));
-        populate(valueMappings, "HOUR", chooseRandom(hours, 4));
-        populate(valueMappings, "DOM", chooseRandom(dom, 4));
-        populate(valueMappings, "MONTH", chooseRandom(months, 4));
-        populate(valueMappings, "DOW", chooseRandom(dow, 4));
-        populate(valueMappings, "YEAR", chooseRandom(years, 4));
+        populate(valueMappings, "SEC", chooseRandom(seconds, 5));
+        populate(valueMappings, "MIN", chooseRandom(minutes, 5));
+        populate(valueMappings, "HOUR", chooseRandom(hours, 5));
+        populate(valueMappings, "DOM", chooseRandom(dom, 5));
+        populate(valueMappings, "MONTH", chooseRandom(months, 5));
+        populate(valueMappings, "DOW", chooseRandom(dow, 5));
+        populate(valueMappings, "YEAR", chooseRandom(years, 5));
 
         valueMappings.put("DOWCOUNT", chooseRandom(dow, 1).get(0));
         valueMappings.put("DOMCOUNT", chooseRandom(domcounts, 1).get(0));
         valueMappings.put("WEEK_ORDINAL", chooseRandom(weekcounts, 1).get(0));
+
+        valueMappings.put("SEC_LIST", generateList("SEC", valueMappings));
+        valueMappings.put("SEC_RANGE", generateRange("SEC", valueMappings));
+        valueMappings.put("MIN_LIST", generateList("MIN", valueMappings));
+        valueMappings.put("MIN_RANGE", generateRange("MIN", valueMappings));
+        valueMappings.put("HOUR_LIST", generateList("HOUR", valueMappings));
+        valueMappings.put("HOUR_RANGE", generateRange("HOUR", valueMappings));
+        valueMappings.put("DOM_LIST", generateList("DOM", valueMappings));
+        valueMappings.put("DOM_RANGE", generateRange("DOM", valueMappings));
+        valueMappings.put("MONTH_LIST", generateList("MONTH", valueMappings));
+        valueMappings.put("MONTH_RANGE", generateRange("MONTH", valueMappings));
+        valueMappings.put("DOW_LIST", generateList("DOW", valueMappings));
+        valueMappings.put("DOW_RANGE", generateRange("DOW", valueMappings));
+        valueMappings.put("YEAR_LIST", generateList("YEAR", valueMappings));
+        valueMappings.put("YEAR_RANGE", generateRange("YEAR", valueMappings));
+
         return valueMappings;
     }
 
     private void validate(Map<String, String> expressions, CronParser parser){
-        Set<String> seconds = generateSet(0, 59);
-        Set<String> minutes = generateSet(0, 59);
-        Set<String> hours = generateSet(0, 23);
-        Set<String> months = generateSet(1, 12);
-        Set<String> dow = generateSet(1, 7);
-        Set<String> dom = generateSet(1, 31);
-        Set<String> years = generateSet(1970, 2099);
-        Set<String> weekcounts = generateSet(1, 5);
-        Set<String> domcounts = generateSet(1, 31);
-
         expressions.forEach((key, value) -> {
-            Map<String, String> valueMappings = new HashMap<>();
-            populate(valueMappings, "SEC", chooseRandom(seconds, 5));
-            populate(valueMappings, "MIN", chooseRandom(minutes, 5));
-            populate(valueMappings, "HOUR", chooseRandom(hours, 5));
-            populate(valueMappings, "DOM", chooseRandom(dom, 5));
-            populate(valueMappings, "MONTH", chooseRandom(months, 5));
-            populate(valueMappings, "DOW", chooseRandom(dow, 5));
-            populate(valueMappings, "YEAR", chooseRandom(years, 5));
-
-            valueMappings.put("DOWCOUNT", chooseRandom(dow, 1).get(0));
-            valueMappings.put("DOMCOUNT", chooseRandom(domcounts, 1).get(0));
-            valueMappings.put("WEEK_ORDINAL", chooseRandom(weekcounts, 1).get(0));
-
-            valueMappings.put("SEC_LIST", generateList("SEC", valueMappings));
-            valueMappings.put("SEC_RANGE", generateRange("SEC", valueMappings));
-            valueMappings.put("MIN_LIST", generateList("MIN", valueMappings));
-            valueMappings.put("MIN_RANGE", generateRange("MIN", valueMappings));
-            valueMappings.put("HOUR_LIST", generateList("HOUR", valueMappings));
-            valueMappings.put("HOUR_RANGE", generateRange("HOUR", valueMappings));
-            valueMappings.put("DOM_LIST", generateList("DOM", valueMappings));
-            valueMappings.put("DOM_RANGE", generateRange("DOM", valueMappings));
-            valueMappings.put("MONTH_LIST", generateList("MONTH", valueMappings));
-            valueMappings.put("MONTH_RANGE", generateRange("MONTH", valueMappings));
-            valueMappings.put("DOW_LIST", generateList("DOW", valueMappings));
-            valueMappings.put("DOW_RANGE", generateRange("DOW", valueMappings));
-            valueMappings.put("YEAR_LIST", generateList("YEAR", valueMappings));
-            valueMappings.put("YEAR_RANGE", generateRange("YEAR", valueMappings));
-
+            Map<String, String> valueMappings = createRandomValueMappings(seconds, minutes, hours, months, dow, dom, years, weekcounts, domcounts);
             String instance = generateCronExpressionInstance(key, valueMappings);
             try {
                 parser.parse(instance);
