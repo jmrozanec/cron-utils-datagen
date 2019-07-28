@@ -116,17 +116,32 @@ public class DatasetGenerator {
 
         expressions.forEach((key, value) -> {
             Map<String, String> valueMappings = new HashMap<>();
-            populate(valueMappings, "SEC", chooseRandom(seconds, 4));
-            populate(valueMappings, "MIN", chooseRandom(minutes, 4));
-            populate(valueMappings, "HOUR", chooseRandom(hours, 4));
-            populate(valueMappings, "DOM", chooseRandom(dom, 4));
-            populate(valueMappings, "MONTH", chooseRandom(months, 4));
-            populate(valueMappings, "DOW", chooseRandom(dow, 4));
-            populate(valueMappings, "YEAR", chooseRandom(years, 4));
+            populate(valueMappings, "SEC", chooseRandom(seconds, 5));
+            populate(valueMappings, "MIN", chooseRandom(minutes, 5));
+            populate(valueMappings, "HOUR", chooseRandom(hours, 5));
+            populate(valueMappings, "DOM", chooseRandom(dom, 5));
+            populate(valueMappings, "MONTH", chooseRandom(months, 5));
+            populate(valueMappings, "DOW", chooseRandom(dow, 5));
+            populate(valueMappings, "YEAR", chooseRandom(years, 5));
 
             valueMappings.put("DOWCOUNT", chooseRandom(dow, 1).get(0));
             valueMappings.put("DOMCOUNT", chooseRandom(domcounts, 1).get(0));
             valueMappings.put("WEEK_ORDINAL", chooseRandom(weekcounts, 1).get(0));
+
+            valueMappings.put("SEC_LIST", generateList("SEC", valueMappings));
+            valueMappings.put("SEC_RANGE", generateRange("SEC", valueMappings));
+            valueMappings.put("MIN_LIST", generateList("MIN", valueMappings));
+            valueMappings.put("MIN_RANGE", generateRange("MIN", valueMappings));
+            valueMappings.put("HOUR_LIST", generateList("HOUR", valueMappings));
+            valueMappings.put("HOUR_RANGE", generateRange("HOUR", valueMappings));
+            valueMappings.put("DOM_LIST", generateList("DOM", valueMappings));
+            valueMappings.put("DOM_RANGE", generateRange("DOM", valueMappings));
+            valueMappings.put("MONTH_LIST", generateList("MONTH", valueMappings));
+            valueMappings.put("MONTH_RANGE", generateRange("MONTH", valueMappings));
+            valueMappings.put("DOW_LIST", generateList("DOW", valueMappings));
+            valueMappings.put("DOW_RANGE", generateRange("DOW", valueMappings));
+            valueMappings.put("YEAR_LIST", generateList("YEAR", valueMappings));
+            valueMappings.put("YEAR_RANGE", generateRange("YEAR", valueMappings));
 
             String instance = generateCronExpressionInstance(key, valueMappings);
             try {
@@ -135,6 +150,19 @@ public class DatasetGenerator {
                 System.out.println(String.format("Not valid: %s with message: %s", key, ex.getMessage()));
             }
         });
+    }
+
+    private String generateList(String prefix, Map<String, String> valueMappings){
+        int size = getNextRandom(5);
+        StringBuilder builder = new StringBuilder();
+        for (int j=1; j<=size; j++) {
+            builder.append(String.format(",%s", valueMappings.get(String.format("%s%s", prefix, j))));
+        }
+        return builder.toString().replaceFirst(",", "");
+    }
+
+    private String generateRange(String prefix, Map<String, String> valueMappings){
+        return String.format("%s-%s", valueMappings.get(String.format("%s1", prefix)), valueMappings.get(String.format("%s2", prefix)));
     }
 
     private Set<String> generateSet(int low, int high){
