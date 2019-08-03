@@ -7,7 +7,8 @@ public interface TemplateMappingStrategy {
 
     static TemplateMappingStrategy getCronExpressionToTarget(){
         return (source, destination, valueMappings, cronexpression, utilsDescription, targetDescription) -> {
-
+            source.put(cronexpression, cronexpression);
+            destination.put(cronexpression, targetDescription);
         };
     }
 

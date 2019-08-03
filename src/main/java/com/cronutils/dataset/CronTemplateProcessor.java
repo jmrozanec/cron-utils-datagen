@@ -14,7 +14,7 @@ public interface CronTemplateProcessor {
         return ((valueMappings, cronTemplate) -> {
             String[]template = new String[]{cronTemplate};
             valueMappings.forEach((key, value) -> {
-                if(!((key.endsWith("_LIST") || (key.endsWith("_LIST"))))){
+                if(!((key.endsWith("_LIST") || (key.endsWith("_RANGE"))))){
                     template[0] = template[0].replace(key, value);
                 }
             });

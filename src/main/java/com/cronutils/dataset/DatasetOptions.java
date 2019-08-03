@@ -11,12 +11,14 @@ class DatasetOptions {
     private ValueSelectionStrategy humanCronDescriptionSelectionStrategy;
     private CronTemplateProcessor cronTemplateProcessor;
     private HeuristicCronDescriptionProcessor heuristicCronDescriptionProcessor;
+    private HumanCronDescriptionProcessor humanCronDescriptionProcessor;
 
     DatasetOptions(ISO639 targetLanguage, CronDescriptionTemplate template, CronDefinition cronDefinition,
                    ValueSelectionStrategy cronKeySelectionStrategy,
                    ValueSelectionStrategy heuristicCronDescriptionSelectionStrategy,
                    ValueSelectionStrategy humanCronDescriptionSelectionStrategy,
-                   CronTemplateProcessor cronTemplateProcessor, HeuristicCronDescriptionProcessor heuristicCronDescriptionProcessor) {
+                   CronTemplateProcessor cronTemplateProcessor, HeuristicCronDescriptionProcessor heuristicCronDescriptionProcessor,
+                   HumanCronDescriptionProcessor humanCronDescriptionProcessor) {
         this.targetLanguage = targetLanguage;
         this.template = template;
         this.cronDefinition = cronDefinition;
@@ -25,6 +27,7 @@ class DatasetOptions {
         this.humanCronDescriptionSelectionStrategy = humanCronDescriptionSelectionStrategy;
         this.cronTemplateProcessor = cronTemplateProcessor;
         this.heuristicCronDescriptionProcessor = heuristicCronDescriptionProcessor;
+        this.humanCronDescriptionProcessor = humanCronDescriptionProcessor;
     }
 
     public ISO639 getTargetLanguage() {
@@ -57,5 +60,9 @@ class DatasetOptions {
 
     public HeuristicCronDescriptionProcessor getHeuristicCronDescriptionProcessor() {
         return heuristicCronDescriptionProcessor;
+    }
+
+    public HumanCronDescriptionProcessor getHumanCronDescriptionProcessor() {
+        return humanCronDescriptionProcessor;
     }
 }

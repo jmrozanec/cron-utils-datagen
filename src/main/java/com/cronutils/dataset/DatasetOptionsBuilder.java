@@ -13,6 +13,7 @@ public class DatasetOptionsBuilder {
     private ValueSelectionStrategy humanCronDescriptionSelectionStrategy = ValueSelectionStrategy.getHumanDescription();
     private CronTemplateProcessor cronTemplateProcessor = CronTemplateProcessor.getNullCronTemplateProcessor();
     private HeuristicCronDescriptionProcessor heuristicCronDescriptionProcessor = HeuristicCronDescriptionProcessor.getNullHeuristicCronDescriptionProcessor();
+    private HumanCronDescriptionProcessor humanCronDescriptionProcessor = HumanCronDescriptionProcessorFactory.getNullHumanCronDescriptionProcessor();
 
     private DatasetOptionsBuilder(){}
 
@@ -56,6 +57,11 @@ public class DatasetOptionsBuilder {
         return this;
     }
 
+    public DatasetOptionsBuilder withHumanCronDescriptionProcessor(HumanCronDescriptionProcessor humanCronDescriptionProcessor){
+        this.humanCronDescriptionProcessor = humanCronDescriptionProcessor;
+        return this;
+    }
+
     public static DatasetOptionsBuilder getInstance(){
         return new DatasetOptionsBuilder();
     }
@@ -63,6 +69,6 @@ public class DatasetOptionsBuilder {
     public DatasetOptions build(){
         return new DatasetOptions(targetLanguage, template, cronDefinition, cronKeySelectionStrategy,
                 heuristicCronDescriptionSelectionStrategy, humanCronDescriptionSelectionStrategy,
-                cronTemplateProcessor, heuristicCronDescriptionProcessor);
+                cronTemplateProcessor, heuristicCronDescriptionProcessor, humanCronDescriptionProcessor);
     }
 }

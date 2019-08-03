@@ -14,7 +14,8 @@ public interface DatasetVisitor {
             try {
                 writer = new BufferedWriter(new FileWriter(targetFilename));
                 for(String key : dataset.getSources().keySet()){
-                    writer.write(String.format("%s | %s\n", dataset.getSources().get(key), dataset.getTargets().get(key)).trim().replaceAll(" +", " "));
+                    String entry = String.format("%s\n", String.format("%s | %s", dataset.getSources().get(key), dataset.getTargets().get(key)).trim().replaceAll(" +", " "));
+                    writer.write(entry);
                 }
                 writer.close();
             } catch (IOException e) {

@@ -63,7 +63,7 @@ public class DatasetGenerator {
                 String heuristicDescription = descriptor.describe(parser.parse(cronTemplateInstance));
                 String heuristicDescriptionTransformed = datasetOptions.getHeuristicCronDescriptionProcessor().process(heuristicDescription);
                 String humanDescription = templates.get(cronTemplate);
-                String humanDescriptionTransformed = humanDescription; //TODO we are not performing transformations by now
+                String humanDescriptionTransformed = datasetOptions.getHumanCronDescriptionProcessor().process(valueMappings, humanDescription);
 
                 String tripletKey = datasetOptions.getCronKeySelectionStrategy().getValue(cronTemplate, cronTemplateTransformed, cronTemplateInstance, heuristicDescription, heuristicDescriptionTransformed, humanDescription, humanDescriptionTransformed);
                 String tripletHeuristicDesc = datasetOptions.getHeuristicCronDescriptionSelectionStrategy().getValue(cronTemplate, cronTemplateTransformed, cronTemplateInstance, heuristicDescription, heuristicDescriptionTransformed, humanDescription, humanDescriptionTransformed);
@@ -102,9 +102,19 @@ public class DatasetGenerator {
         populate(valueMappings, "DOW", chooseRandom(dow, 5));
         populate(valueMappings, "YEAR", chooseRandom(years, 5));
 
-        valueMappings.put("DOWCOUNT", chooseRandom(dow, 1).get(0));
-        valueMappings.put("DOMCOUNT", chooseRandom(domcounts, 1).get(0));
+        valueMappings.put("SEC_VAL", valueMappings.get("SEC1"));
+        valueMappings.put("MIN_VAL", valueMappings.get("MIN1"));
+        valueMappings.put("HOUR_VAL", valueMappings.get("HOUR1"));
+        valueMappings.put("DOM_VAL", valueMappings.get("DOM1"));
+        valueMappings.put("MONTH_VAL", valueMappings.get("MONTH1"));
+        valueMappings.put("DOW_VAL", valueMappings.get("DOW1"));
+        valueMappings.put("YEAR_VAL", valueMappings.get("YEAR1"));
+
         valueMappings.put("WEEK_ORDINAL", chooseRandom(weekcounts, 1).get(0));
+
+        valueMappings.put("SEC_VAL_ORDINAL", getOrdinal(Integer.parseInt(valueMappings.get("SEC_VAL"))));
+        valueMappings.put("DOM_VAL_ORDINAL", getOrdinal(Integer.parseInt(valueMappings.get("DOM_VAL"))));
+        valueMappings.put("WEEK_VAL_ORDINAL", getOrdinal(Integer.parseInt(valueMappings.get("WEEK_ORDINAL"))));
 
         valueMappings.put("SEC_LIST", generateList("SEC", valueMappings));
         valueMappings.put("SEC_RANGE", generateRange("SEC", valueMappings));
@@ -124,6 +134,18 @@ public class DatasetGenerator {
         return valueMappings;
     }
 
+    private String getOrdinal(int number){
+        String[] sufixes = new String[] { "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th" };
+        switch (number % 100) {
+            case 11:
+            case 12:
+            case 13:
+                return number + "th";
+            default:
+                return number + sufixes[number % 10];
+        }
+    }
+
     private void validate(Map<String, String> expressions, CronParser parser){
         expressions.forEach((key, value) -> {
             Map<String, String> valueMappings = createRandomValueMappings(seconds, minutes, hours, months, dow, dom, years, weekcounts, domcounts);
@@ -137,10 +159,15 @@ public class DatasetGenerator {
     }
 
     private String generateList(String prefix, Map<String, String> valueMappings){
-        int size = getNextRandom(5);
         StringBuilder builder = new StringBuilder();
-        for (int j=1; j<=size; j++) {
-            builder.append(String.format(",%s", valueMappings.get(String.format("%s%s", prefix, j))));
+        int size = getNextRandom(5);
+        int values = 0;
+        while(values<size){
+            if(size-values>2 && getNextRandom(2)>1){
+                builder.append(String.format(",%s-%s", valueMappings.get(String.format("%s%s", prefix, ++values)), valueMappings.get(String.format("%s%s", prefix, ++values))));
+            }else{
+                builder.append(String.format(",%s", valueMappings.get(String.format("%s%s", prefix, ++values))));
+            }
         }
         return builder.toString().replaceFirst(",", "");
     }
@@ -177,7 +204,9 @@ public class DatasetGenerator {
 
     private String generateCronExpressionInstance(String crontemplate, Map<String, String> mappings){
         String[]template = new String[]{crontemplate};
-        mappings.forEach((key, value) -> template[0] = template[0].replace(key, value));
+        mappings.forEach((key, value) -> {
+            template[0] = template[0].replace(key, value);
+        });
         return template[0];
     }
 
