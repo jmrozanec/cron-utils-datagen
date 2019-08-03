@@ -5,7 +5,7 @@ import com.cronutils.model.definition.CronDefinitionBuilder;
 
 public class DatasetMain {
     public static void main(String[] args) {
-        int instancesCount = 100;//250000;
+        int instancesCount = 250000;
         //cron instance -> human template
         options01(ISO639.EN, instancesCount, CronDescriptionTemplate.TEMPLATE_01, "set01");
         //cron instance -> human template with KEYWORDS replaced

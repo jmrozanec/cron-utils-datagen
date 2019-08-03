@@ -53,7 +53,7 @@ def vectorize_expressions(expressions_source, expressions_target, char2index_sou
     return tokenized_expressions_source, tokenized_expressions_target, target_data
 
 
-def decode_seq(encoder, decoder, index2char_source, index2char_target, charsset_target, input_sequence):
+def decode_seq(encoder, decoder, index2char_source, index2char_target, char2index_target, charsset_target, input_sequence, max_len_expr_target):
     states_val = encoder.predict(input_sequence)
 
     target_seq = np.zeros((1, 1, len(charsset_target)))
@@ -178,10 +178,11 @@ def train_model(epochs, dataset_path):
     with open("results-{}".format(dataset_name), 'w') as output_file:
         for seq_index in range(len(expr_source_test)):
             input_sequence = tokenized_expressions_source_test[seq_index:seq_index+1]
-            translation = decode_seq(encoder_model, decoder_model, index2char_source, index2char_target, charsset_target, input_sequence)
+            translation = decode_seq(encoder_model, decoder_model, index2char_source, index2char_target, char2index_target, charsset_target, input_sequence, max_len_expr_target)
             output_file.write("'{}'='{}'\n".format(expr_source_test[seq_index], translation.replace("\n", "")))
         output_file.flush()
     output_file.close()
 
 if __name__ == '__main__':
     train_model()
+
