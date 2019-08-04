@@ -38,7 +38,7 @@ SEC_VAL MIN_VAL * ? * 2/2 | every hour at MIN_VAL:SEC_VAL on even days of week
 0 0 HOUR_VAL * * ? | every day at HOUR_VAL
 0 0 0 ? * DOW_VAL | every DOW_VAL at midnight
 0 MIN_VAL HOUR_RANGE ? * DOW_VAL | HOUR_RANGE on DOW_VAL at minute MIN_VAL
-0 0 12 ? * DOW_LIST | every DOW_VAL and DOW_VAL at noon
+0 0 12 ? * DOW_LIST | every DOW_LIST at noon
 0 MIN_VAL 0/2 ? * * | every even hour at minute MIN_VAL
 0 */2 * ? * * | every even minute
 SEC_VAL MIN_VAL 1/2 ? * * | every uneven hour at MIN_VAL:SEC_VAL
@@ -49,7 +49,7 @@ SEC_VAL MIN_VAL 1/2 ? * * | every uneven hour at MIN_VAL:SEC_VAL
 0 0 1/2 ? * * | every uneven hour
 0 0 0 DOM_VAL * ? | every month on the DOM_VAL_ORDINAL day of month, at midnight
 0 MIN_VAL HOUR_RANGE DOM_VAL * ? | HOUR_RANGE at minute MIN_VAL on DOM_VAL_ORDINAL day of month
-0 MIN_VAL HOUR_VAL DOM_VAL MONTH_VAL ? YEAR_VAL | on MONTH_VAL DOM_VAL_ORDINAL day of month at HOUR_VAL:MIN_VAL, if the year is YEAR_VAL or YEAR_VAL
+0 MIN_VAL HOUR_VAL DOM_VAL MONTH_VAL ? YEAR_VAL | on MONTH_VAL DOM_VAL_ORDINAL day of month at HOUR_VAL:MIN_VAL, if the year is YEAR_VAL
 0 0 12 L-DOM_VAL * ? | At noon every day from DOM_VAL_ORDINAL till last day of month
 0 MIN_VAL HOUR_VAL ? * DOW_VAL | every DOW_VAL at HOUR_VAL:MIN_VAL
 0 MIN_VAL HOUR_VAL DOM_VALW * ? | every month on the nearest weekday to the DOM_VAL_ORDINAL day of the month, at HOUR_VAL:MIN_VAL

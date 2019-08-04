@@ -1,5 +1,5 @@
 import click
-from nltk.translate.bleu_score import corpus_bleu, SmoothingFunction
+from nltk.translate.bleu_score import sentence_bleu, corpus_bleu, SmoothingFunction
 from nltk.util import ngrams
 from random import shuffle
 import datetime as dt
@@ -14,17 +14,25 @@ def get_tokenized(sentence):
     tokens = [token for token in sentence.split(" ") if token != ""]
     return tokens
 
+def get_sentence_bleu(source, translation):
+    #Smoothing methods described here: https://kite.com/python/docs/nltk.translate.bleu_score.SmoothingFunction
+    smoothing_method = SmoothingFunction().method3
+    if(source==translation):
+        return 1.0
+    return sentence_bleu(get_tokenized(source), get_tokenized(translation), smoothing_function=smoothing_method)
+
 def get_corpus_bleu(sources, translations):
     references=[]
     candidates=[]
+    scores=[]
     for idx in range(0, len(sources)):
         if(sources[idx]!=''):
-            references.append(get_tokenized(sources[idx]))
-            candidates.append(get_tokenized(translations[idx]))
-    
-    #Smoothing methods described here: https://kite.com/python/docs/nltk.translate.bleu_score.SmoothingFunction
-    smoothing_method = SmoothingFunction().method4
-    return round(corpus_bleu(references, candidates, smoothing_function=smoothing_method),4)
+            #references.append(get_tokenized(sources[idx]))
+            #candidates.append(get_tokenized(translations[idx]))
+            scores.append(get_sentence_bleu(sources[idx], translations[idx]))
+    print("{} {}".format(round(np.mean(scores), 4), round(np.std(scores), 4)))
+    return round(np.mean(scores), 4)
+    #return round(corpus_bleu(references, candidates, smoothing_function=smoothing_method),4)
 
 @click.command()
 @click.option('--dataset_name', help='Dataset name')
@@ -53,9 +61,19 @@ def evaluate(dataset_name):
     sources=[x.split(separator)[1].strip().lower() for x in test_lines if x!='']
     translations=[x.split(separator)[1].strip().lower() for x in result_lines if x!='']
 
+    sourcekeys=[x.split(separator)[0].strip().lower() for x in test_lines if x!='']
+    translkeys=[x.split(separator)[0].strip().lower() for x in result_lines if x!='']
+    mismatch_counter=0
+    for idx in range(0, len(sourcekeys)):
+        if(sources[idx]!=translations[idx]):
+            #print("'{}': {} -> {}".format(sourcekeys[idx], sources[idx], translations[idx]))
+            mismatch_counter=mismatch_counter+1
+
+    print("{}/{}".format(mismatch_counter, len(translations)))
+    correct_ratio=round(1-(float(mismatch_counter)/float(len(translations))), 2)
     bleu_score=get_corpus_bleu(sources, translations)
     time_end = dt.datetime.now()
-    print("# We invested {} seconds to compute results for single model. BLEU score is: {}".format(int((time_end-time_start).total_seconds()), bleu_score))
+    print("# We invested {} seconds to compute results for single model. BLEU score is: {} We got {} right".format(int((time_end-time_start).total_seconds()), bleu_score, correct_ratio))
 
 if __name__ == '__main__':
     evaluate()

@@ -160,7 +160,7 @@ public class DatasetGenerator {
 
     private String generateList(String prefix, Map<String, String> valueMappings){
         StringBuilder builder = new StringBuilder();
-        int size = getNextRandom(5);
+        int size = Math.max(2, getNextRandom(5));
         int values = 0;
         while(values<size){
             if(size-values>2 && getNextRandom(2)>1){
