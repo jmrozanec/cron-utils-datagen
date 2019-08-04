@@ -129,10 +129,6 @@ def train_model(epochs, dataset_path):
     decoder_input = Input(shape=(None,len(charsset_target)), name="decoder-input")
     decoder_LSTM = LSTM(256,return_sequences=True, return_state = True, name="decoder-LSTM")
     decoder_out, decoder_h, decoder_c = decoder_LSTM(decoder_input, initial_state=encoder_states)
-    print("Encoder")
-    print(decoder_h)
-    print("Decoder")
-    print(decoder_c)
     decoder_dense = Dense(len(charsset_target),activation='softmax', name="decoder-dense")
     decoder_out = decoder_dense(decoder_out)
 
