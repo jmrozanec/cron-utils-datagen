@@ -66,7 +66,7 @@ def evaluate(dataset_name):
     mismatch_counter=0
     for idx in range(0, len(sourcekeys)):
         if(sources[idx]!=translations[idx]):
-            #print("'{}': {} -> {}".format(sourcekeys[idx], sources[idx], translations[idx]))
+            print("'{}': {} -> {}".format(sourcekeys[idx], sources[idx], translations[idx]))
             mismatch_counter=mismatch_counter+1
 
     print("{}/{}".format(mismatch_counter, len(translations)))
