@@ -1,9 +1,9 @@
-SEC_VAL 0 * ? * 1/2 | eEvery month on the last wvery hour at second SEC_VAL on uneven days of week
+SEC_VAL 0 * ? * 1/2 | every month, every hour at second SEC_VAL on uneven days of week
 0 0 * ? * * | every hour
 0 MIN_VAL HOUR_VAL */DOM_VAL * ? | every DOM_VAL days at HOUR_VAL:MIN_VAL
 0 MIN_VAL HOUR_VAL ? MONTH_VAL * | every day at HOUR_VAL:MIN_VAL in MONTH_VAL
 0 0 0 ? * DOW_VAL * | every DOW_VAL at midnight
-SEC1 0 * ? 2/2 * | every hour at second SEC_VAL on even months
+SEC_VAL 0 * ? 2/2 * | every hour at second SEC_VAL on even months
 0 0 0 1/MONTH_VAL * ? | every MONTH_VAL months, at midnight
 0 MIN_VAL HOUR_RANGE L * ? | Last day of month, at minute MIN_VAL for HOUR_RANGE
 * MIN_VAL HOUR_RANGE ? * DOW_RANGE | every day between DOW_VAL and DOW_VAL between HOUR_VAL and HOUR_VAL at minute MIN_VAL
@@ -58,10 +58,10 @@ SEC_VAL MIN_VAL 1/2 ? * * | every uneven hour at MIN_VAL:SEC_VAL
 * * * ? * * * | every second
 0 0 12 */DOM_VAL * ? | every DOM_VAL days at noon
 0 MIN_VAL HOUR_VAL * * ? | every day at HOUR_VAL:MIN_VAL
-0 MIN1 0-11 1/MONTH1 * ? | every MONTH_VAL months on the DOM_VAL_ORDINAL day of month, at minute MIN_VAL every hour before midday
-0 0 0 ? * DOW1#WEEK_ORDINAL | every month on the WEEK_VAL_ORDINAL DOW_VAL of the month, at midnight
+0 MIN_VAL 0-11 1/MONTH_VAL * ? | every MONTH_VAL months on the DOM_VAL_ORDINAL day of month, at minute MIN_VAL every hour before midday
+0 0 0 ? * DOW_VAL#WEEK_ORDINAL | every month on the WEEK_VAL_ORDINAL DOW_VAL of the month, at midnight
 0 * * ? * * | every minute
-SEC1 MIN1 * ? * 1/2 | every hour at MIN_VAL:MIN_VAL on uneven days of week
+SEC_VAL MIN_VAL * ? * 1/2 | every hour at MIN_VAL:SEC_VAL on uneven days of week
 * * 0-11 ? * * | Each second before midday
 0 0 * ? 1/2 * | every hour on uneven months
 0 MIN_VAL HOUR_RANGE * * ? | HOUR_RANGE at MIN_VAL
