@@ -63,7 +63,7 @@ glob2==0.6
 gmpy2==2.0.8
 google-pasta==0.1.7
 greenlet==0.4.13
-grpcio==1.22.0
+grpcio==1.53.0
 h5py==2.9.0
 hdijupyterutils==0.12.7
 heapdict==1.0.0
